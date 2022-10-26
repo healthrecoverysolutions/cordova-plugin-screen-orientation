@@ -80,7 +80,15 @@
             }
             if (value != nil) {
                 _isLocked = true;
-                [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+                if (@available(iOS 16.0, *)) {
+                    if ([self.viewController respondsToSelector:@selector(setNeedsUpdateOfSupportedInterfaceOrientations)]) {
+                        [self.viewController setNeedsUpdateOfSupportedInterfaceOrientations];
+                    } else {
+                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+                    }
+                } else {
+                    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+                }
             } else {
                 _isLocked = false;
             }
